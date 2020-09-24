@@ -1,0 +1,24 @@
+{
+  "name": "chaindraw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "0.0.9",
+    "@truffle/hdwallet-provider": "^1.0.43",
+    "node-pre-gyp": "^0.15.0",
+    "sequelize": "^6.3.5",
+    "sqlite3": "^5.0.0",
+    "twit": "^2.2.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
