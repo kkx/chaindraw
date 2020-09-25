@@ -3,13 +3,21 @@ const config = require('./config');
 const Draw = artifacts.require('Draw');
 const Status = utils.Status;
 
+var drawContract;
+
 async function addDrawStatus(mention){
 	// add to db
 	s = await Status.findOne({ where: {status_id: mention.id_str}})
 	console.log(mention)
 	console.log(s)
 	if (!s){
+        // dont do anything with a not quote_retweet tweet
+        if (!mention.quote_status_id_str){
+            s = await Status.create({status_id: mention.id_str, state:2, ids: ""})
+		    console.log("status created, not a quoted retweet", s)
+        }
 		retweeters = [];
+        console.log("quote_status_id_str", mention.quoted_status_id_str);
 		while(true){
 				var retweets = await new Promise(resolve => {
 					utils.T.get('statuses/retweeters/ids', {id: mention.quoted_status_id_str, count:100,  trim_user:1, include_entities: false, stringify_ids: true}, function(error, data, response){resolve(data)})
@@ -24,7 +32,6 @@ async function addDrawStatus(mention){
 			
 		
 	    // create draw in blockchain
-	    var drawContract = await Draw.at(config.drawContractAddress)
 		console.log(mention.id_str, retweeters, retweeters.length)
 		console.log(Date.now().toString())
 		const hash = web3.utils.sha3(Date.now().toString());
@@ -64,11 +71,9 @@ async function getLastStatusId(){
 
 async function twitterBot(){
 	// sync db
-	await utils.sequelize.sync();
+	//await utils.sequelize.sync();
 	console.log("synced")
 
-	var draw = await Draw.at(config.drawContractAddress)
-	console.log(draw.address)
 	while(true){
 			last_id = await getLastStatusId(); 
 			console.log('last_id', last_id);
@@ -77,17 +82,19 @@ async function twitterBot(){
 				  }); 
 			console.log('metions', mentions)
 			await addDrawStatuses(mentions)
-		    await utils.sleep(50000);
+            break;
+		    //await utils.sleep(50000);
 	}
 }
 
 
 module.exports = async function(callback) {
-	try{
-		await twitterBot();
-	}catch(error){
-		console.log(error)
-	}
+    drawContract = await Draw.at(config.drawContractAddress)
+    try{
+        await twitterBot();
+    }catch(error){
+        console.log(error)
+    }
 	callback()
 }
 

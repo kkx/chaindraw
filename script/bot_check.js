@@ -3,6 +3,7 @@ const utils = require('./utils');
 const config = require('./config');
 const Status = utils.Status;
 const T = utils.T
+var draw;
 
 async function getPendingDrawStatus(){
 	var statuses = await Status.findAll({ where: {state: 0} })
@@ -11,14 +12,13 @@ async function getPendingDrawStatus(){
 
 async function drawResponseBot(){
 	// sync db
-	await utils.sequelize.sync();
+	//await utils.sequelize.sync();
 
-	var draw = await Draw.at(config.drawContractAddress)
 	console.log(draw.address)
 	while(true){
         statuses = await getPendingDrawStatus();
         console.log(statuses)
-        await utils.sleep(5000);
+        //await utils.sleep(5000);
         for (var i=0; i<statuses.length; i++){
             var winner_id = ''
             try{
@@ -44,15 +44,17 @@ async function drawResponseBot(){
                 console.log('status ', statuses[i].status_id, 'not filled with random number')
             }
         }
+        break;
 	}
 }
 
 module.exports = async function(callback) {
-    try{
-        await drawResponseBot();
-    }catch(error){
-        console.log(error)
-    }
+    draw = await Draw.at(config.drawContractAddress)
+        try{
+            await drawResponseBot();
+        }catch(error){
+            console.log(error)
+        }
     callback()
 }
 
