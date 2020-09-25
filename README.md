@@ -1,9 +1,9 @@
 # Chaindraw
 
-A demo project which is based on [chainlink VRF](https://docs.chain.link/docs/chainlink-vrf) to provide a fairy draw ceremony on ethereum blockchain to twitter users. 
+A demo project which is based on [chainlink VRF](https://docs.chain.link/docs/chainlink-vrf) to provide a fairly draw ceremony on ethereum blockchain to twitter users. 
 
 ## Description
-A lot of draw event ocurre nowaday in social network as a marketing method, however draw event creators normally provide the winner by a black-box selection which creates doubts about the fairness of the event. With blockchain based solution ChainDraw, draw event can be fully transparent and verifiable to user. 
+A lot of draw event happen nowaday in social network as a marketing method, however draw event creators normally provide the winner by a black-box selection which creates doubts about the fairness of the event. With blockchain based solution ChainDraw, draw event can be fully transparent and verifiable to user. 
 The mecanism consists in following steps:
 - user call [chainDraw](https://twitter.com/chain_draw) bot by doing a quote_retweet and texting @chain_draw, a draw event is then created.
 - Currently, the retweeter of the quoted_tweet will be used as the population of the created draw event, retweeter's ids will be submitted to our [draw smartcontract](https://rinkeby.etherscan.io/address/0x92174A89559b38d536Efc363CBc1fdE782A4bf56) by calling `takeDraw` transaction, and a request to chainlink vrf for a random number will be created.
